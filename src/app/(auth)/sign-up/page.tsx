@@ -41,8 +41,8 @@ export default function SignUp() {
   };
 
   return (
-    <Card className="max-w-md shadow-md z-50">
-      <CardHeader>
+    <Card className="w-full max-w-md p-6 shadow-lg">
+      <CardHeader className="text-center">
         <CardTitle className="text-lg md:text-xl">Sign Up</CardTitle>
         <CardDescription className="text-xs md:text-sm">
           Enter your information to create an account

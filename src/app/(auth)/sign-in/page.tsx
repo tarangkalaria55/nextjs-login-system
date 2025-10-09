@@ -23,8 +23,8 @@ export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <Card className="max-w-md shadow-md z-50">
-      <CardHeader>
+    <Card className="w-full max-w-md p-6 shadow-lg">
+      <CardHeader className="text-center">
         <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
         <CardDescription className="text-xs md:text-sm">
           Enter your email below to login to your account
