@@ -19,19 +19,34 @@ type ManipulateFields<
   Required<Pick<T, TRequired>> &
   Partial<Pick<T, TOptional>>;
 
+type MailOptions = Parameters<(typeof transporter)["sendMail"]>[0] & {
+  displayName?: string;
+};
+
 // Group properties for clarity
 type RequiredFields = "to" | "subject" | "text" | "html";
-type OptionalFields = "from";
+type OptionalFields = "from" | "displayName";
 
-type MailOptions = Parameters<(typeof transporter)["sendMail"]>[0];
 type SendMailType = ManipulateFields<
   MailOptions,
   RequiredFields,
   OptionalFields
 >;
 
-export const sendEmail = async ({ from, ...props }: SendMailType) => {
+export const sendEmail = async ({
+  from,
+  displayName,
+  ...props
+}: SendMailType) => {
   await transporter.verify();
+
+  if (!from) {
+    from = env.EMAIL_FROM;
+  }
+
+  if (displayName) {
+    from = `"${displayName} <${from}>"`;
+  }
 
   await transporter.sendMail({
     from: from || env.EMAIL_FROM,
