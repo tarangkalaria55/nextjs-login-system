@@ -5,6 +5,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { db } from "@/drizzle/db";
+import { env } from "@/env/server";
 
 export const auth = betterAuth({
   appName: "Nextjs App",
@@ -12,6 +13,12 @@ export const auth = betterAuth({
     provider: "pg",
   }),
   plugins: [nextCookies()],
+  socialProviders: {
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    },
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -37,9 +44,7 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (_ctx) => {
-      // if (ctx.path !== "/sign-up/email") {
-      //           return;
-      //       }
+      console.log("auth middleware", _ctx.path);
       return;
     }),
   },

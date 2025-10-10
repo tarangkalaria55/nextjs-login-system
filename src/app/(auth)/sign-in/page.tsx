@@ -67,8 +67,9 @@ export default function SignIn() {
           <div className="flex items-center gap-2">
             <Checkbox
               id="remember"
+              checked={rememberMe}
               onClick={() => {
-                setRememberMe(!rememberMe);
+                setRememberMe((prev) => !prev);
               }}
             />
             <Label htmlFor="remember">Remember me</Label>
@@ -83,6 +84,8 @@ export default function SignIn() {
                 {
                   email,
                   password,
+                  rememberMe,
+                  callbackURL: "/",
                 },
                 {
                   onRequest: (_ctx) => {
@@ -90,6 +93,7 @@ export default function SignIn() {
                   },
                   onResponse: (_ctx) => {
                     setLoading(false);
+                    console.log(_ctx.response.url);
                   },
                 },
               );
@@ -99,6 +103,35 @@ export default function SignIn() {
               <Loader2 size={16} className="animate-spin" />
             ) : (
               <p> Login </p>
+            )}
+          </Button>
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+            onClick={async () => {
+              await authClient.signIn.social(
+                {
+                  provider: "google",
+                  callbackURL: "/",
+                },
+                {
+                  onRequest: (_ctx) => {
+                    setLoading(true);
+                  },
+                  onResponse: (_ctx) => {
+                    setLoading(false);
+                    console.log(_ctx.response.url);
+                  },
+                },
+              );
+            }}
+          >
+            {loading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <p> Login using google </p>
             )}
           </Button>
         </div>

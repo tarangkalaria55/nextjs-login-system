@@ -33,5 +33,6 @@ export const createRouteMatcher = (routes: RouteMatcherParam) => {
   }
 
   const matcher = createPathMatcher(routes);
-  return (req: NextRequest) => matcher(req.nextUrl.pathname);
+  return (req: NextRequest | string) =>
+    matcher(typeof req === "string" ? req : req.nextUrl.pathname);
 };
