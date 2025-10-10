@@ -2,6 +2,7 @@ import "../../env/config";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
 import { db } from "@/drizzle/db";
 
@@ -33,5 +34,13 @@ export const auth = betterAuth({
         console.log("change email", url, user.name, token, newEmail);
       },
     },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (_ctx) => {
+      // if (ctx.path !== "/sign-up/email") {
+      //           return;
+      //       }
+      return;
+    }),
   },
 });
