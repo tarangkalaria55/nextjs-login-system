@@ -3,11 +3,11 @@ import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "./lib/auth/auth";
 import { createRouteMatcher } from "./lib/clerkjs/routeMatcher";
 
-const isAuthRoute = createRouteMatcher(["/sign-in", "/sign-up"]);
+const isAuthRoute = createRouteMatcher(["/login", "/sign-up"]);
 
 const isPublicRoute = createRouteMatcher([]);
 
-const loginUrl = "/sign-in";
+const loginUrl = "/login";
 const dashboardUrl = "/dashboard";
 
 export async function middleware(request: NextRequest) {
