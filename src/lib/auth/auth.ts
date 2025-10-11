@@ -1,11 +1,14 @@
 import "../../env/config";
 
+import { render } from "@react-email/components";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
+import { PasswordResetEmail } from "@/components/emails/password-reset-email";
 import { db } from "@/drizzle/db";
 import { env } from "@/env/server";
+import { sendEmail } from "../emails/send-email";
 
 export const auth = betterAuth({
   appName: "Nextjs App",
@@ -24,6 +27,23 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     async sendResetPassword({ user, url, token }) {
       console.log("Reset Password", url, user.name, token);
+
+      const html = await render(
+        PasswordResetEmail({
+          userEmail: user.email,
+          expiryTime: "24h",
+          resetLink: url,
+        }),
+      );
+
+      console.log(html);
+
+      await sendEmail({
+        to: user.email,
+        subject: "Reset Password",
+        html: html,
+        text: "",
+      });
     },
   },
   emailVerification: {
