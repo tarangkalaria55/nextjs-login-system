@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/correctness/noUnusedImports: <> */
 import {
   Body,
   Button,
@@ -12,7 +11,6 @@ import {
   Tailwind,
   Text,
 } from "@react-email/components";
-import * as React from "react";
 
 interface PasswordResetEmailProps {
   userEmail: string;
@@ -20,7 +18,7 @@ interface PasswordResetEmailProps {
   expiryTime: string;
 }
 
-export const PasswordResetEmail = (props: PasswordResetEmailProps) => {
+const PasswordResetEmail = (props: PasswordResetEmailProps) => {
   const { userEmail, resetLink, expiryTime } = props;
 
   return (
