@@ -27,9 +27,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
-    async sendResetPassword({ user, url, token }) {
-      console.log("Reset Password", url, user.name, token);
-
+    async sendResetPassword({ user, url }) {
       const html = await render(
         PasswordResetEmail({
           userEmail: user.email,
@@ -37,8 +35,6 @@ export const auth = betterAuth({
           resetLink: url,
         }),
       );
-
-      console.log(html);
 
       await sendEmail({
         to: user.email,
@@ -52,9 +48,7 @@ export const auth = betterAuth({
     autoSignInAfterVerification: true,
     sendOnSignIn: true,
     sendOnSignUp: true,
-    async sendVerificationEmail({ user, url, token }) {
-      console.log("verify email", url, user.name, token);
-
+    async sendVerificationEmail({ user, url }) {
       const html = await render(
         EmailVerification({
           userName: user.name,
@@ -63,8 +57,6 @@ export const auth = betterAuth({
           expirationTime: "24h",
         }),
       );
-
-      console.log(html);
 
       await sendEmail({
         to: user.email,
@@ -77,9 +69,7 @@ export const auth = betterAuth({
   user: {
     changeEmail: {
       enabled: true,
-      async sendChangeEmailVerification({ user, url, token, newEmail }) {
-        console.log("change email", url, user.name, token, newEmail);
-
+      async sendChangeEmailVerification({ user, url, newEmail }) {
         const html = await render(
           ChangeEmailVerification({
             userName: user.name,
@@ -89,8 +79,6 @@ export const auth = betterAuth({
             expirationTime: "24h",
           }),
         );
-
-        console.log(html);
 
         await sendEmail({
           to: newEmail,
