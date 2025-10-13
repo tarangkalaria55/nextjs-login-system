@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -8,18 +10,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { authClient } from "@/lib/auth/auth-client";
 
-export default function UserProfile({
+export function UserProfile({
   user,
 }: {
   user: {
     name: string;
     email: string;
-    image: string;
+    image?: string;
   };
 }) {
+  const router = useRouter();
+
+  const [open, setOpen] = useState(false);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarImage src={user.image} alt={user.name} />
@@ -43,9 +50,9 @@ export default function UserProfile({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => {
-            // Replace with real logout logic
-            console.log("Logout");
+          onClick={async () => {
+            await authClient.signOut();
+            router.push("/login");
           }}
         >
           Logout

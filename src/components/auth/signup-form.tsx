@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
-import { cn } from "@/lib/utils";
+import { cn, convertImageToBase64 } from "@/lib/utils";
 
 export function SignupForm({
   className,
@@ -200,13 +200,4 @@ export function SignupForm({
       </FieldDescription>
     </div>
   );
-}
-
-async function convertImageToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
 }

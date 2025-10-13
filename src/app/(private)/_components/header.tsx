@@ -2,21 +2,36 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import UserProfile from "./user-profile";
+import { useSession } from "@/components/auth/session-provider";
+import { UserProfile } from "./user-profile";
 
-const user = {
-  name: "Jane Doe",
-  email: "jane.doe@example.com",
-  image: "https://github.com/shadcn.png",
-};
+export const Header = () => {
+  const { session } = useSession();
 
-export const Header = () => (
-  <div className="bg-primary dark:bg-slate-700 py-2 px-5 flex justify-between items-center">
-    <Link href="/">
-      <Image src="/logo.png" alt="Logo" width={40} height={40} />
-    </Link>
-    <div className="flex items-center gap-4">
-      <UserProfile user={user} />
+  if (!session) {
+    return null;
+  }
+
+  return (
+    <div className="p-2 flex justify-between items-center">
+      <Link href="/dashboard">
+        <Image
+          src="/next.svg"
+          alt="Logo"
+          width={0}
+          height={0}
+          className="dark:invert aspect-auto w-auto h-4"
+        />
+      </Link>
+      <div className="flex items-center gap-4">
+        <UserProfile
+          user={{
+            name: session.user.name,
+            email: session.user.email,
+            image: session.user.image ?? undefined,
+          }}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
