@@ -29,7 +29,7 @@
     {
       "name": "Next.js: debug full stack",
       "type": "node",
-      "runtimeExecutable": "C:/Users/taran/AppData/Roaming/fnm/node-versions/v22.20.0/installation/node.exe",
+      "runtimeExecutable": "${env:NODE_PATH}\\node.exe",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
       "runtimeArgs": ["--inspect"],
