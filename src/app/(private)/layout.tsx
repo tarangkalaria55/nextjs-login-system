@@ -1,4 +1,4 @@
-import Header from "./_components/header";
+import { Header } from "./_components/header";
 
 export default function PrivateLayout({ children }: LayoutProps<"/">) {
   return (
