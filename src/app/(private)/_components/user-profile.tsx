@@ -52,7 +52,7 @@ export function UserProfile({
         <DropdownMenuItem
           onClick={async () => {
             await authClient.signOut();
-            router.push("/login");
+            router.push("/auth/login");
           }}
         >
           Logout

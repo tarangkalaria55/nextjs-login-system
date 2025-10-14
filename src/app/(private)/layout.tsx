@@ -23,7 +23,7 @@ export default function PrivateLayout({ children }: LayoutProps<"/">) {
   }
 
   if (!data) {
-    router.push("/login");
+    router.push("/auth/login");
     return;
   }
 

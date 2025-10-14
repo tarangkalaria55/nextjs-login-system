@@ -11,6 +11,7 @@ import PasswordResetEmail from "@/components/emails/password-reset-email";
 import { db } from "@/drizzle/db";
 import { env } from "@/env/server";
 import { sendEmail } from "../emails/send-email";
+import { logger as winstonLogger } from "../logger";
 
 export const auth = betterAuth({
   appName: "Nextjs App",
@@ -96,5 +97,13 @@ export const auth = betterAuth({
       console.log("auth middleware", _ctx.path);
       return;
     }),
+  },
+  logger: {
+    disabled: false,
+    disableColors: false,
+    level: "info",
+    log(level, message, ...args) {
+      winstonLogger.log(level, message, ...args);
+    },
   },
 });

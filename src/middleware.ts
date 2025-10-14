@@ -1,33 +1,13 @@
-import { headers } from "next/headers";
+import { logger } from "better-auth";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "./lib/auth/auth";
-import { createRouteMatcher } from "./lib/clerkjs/routeMatcher";
-
-const isAuthRoute = createRouteMatcher(["/login", "/sign-up"]);
-
-const isPublicRoute = createRouteMatcher([]);
-
-const loginUrl = "/login";
-const dashboardUrl = "/dashboard";
+// import { createRouteMatcher } from "./lib/clerkjs/routeMatcher";
 
 export async function middleware(request: NextRequest) {
-  const isPublicUrl = isPublicRoute(request);
-  const isAuthUrl = isAuthRoute(request);
-  const isProtectedUrl = !isPublicUrl && !isAuthUrl;
-
-  const session = await auth.api.getSession({
-    headers: await headers(),
+  logger.info("middleware GET request", {
+    url: request.url,
+    method: request.method,
+    nextUrl: request.nextUrl,
   });
-
-  const isLoggedIn = !!session;
-
-  if (isAuthUrl && isLoggedIn) {
-    return NextResponse.redirect(new URL(dashboardUrl, request.url));
-  }
-
-  if (isProtectedUrl && !isLoggedIn) {
-    return NextResponse.redirect(new URL(loginUrl, request.url));
-  }
 
   return NextResponse.next();
 }

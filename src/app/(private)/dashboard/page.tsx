@@ -15,7 +15,7 @@ export default function DashboardPage() {
     } else {
       if (data.success) {
         toast.success("Logged out successfully");
-        router.push("/login");
+        router.push("/auth/login");
       } else {
         toast.error("Try again");
       }
