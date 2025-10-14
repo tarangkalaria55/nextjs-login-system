@@ -16,7 +16,8 @@
     "db:pull": "npx drizzle-kit pull --config ./drizzle.config.ts",
     "db:studio": "npx drizzle-kit studio --config ./drizzle.config.ts",
     "env:push": "npx dotenv-vault@latest push",
-    "env:pull": "npx dotenv-vault@latest pull"
+    "env:pull": "npx dotenv-vault@latest pull",
+    "publish:iis": "ts-node ./publish-iis.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -53,12 +54,14 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
     "@tailwindcss/postcss": "^4",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.2",
     "@types/pg": "^8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.5",
+    "fs-extra": "^11.3.2",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
