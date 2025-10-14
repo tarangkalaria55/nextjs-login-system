@@ -43,3 +43,11 @@ next-env.d.ts
 .flaskenv*
 !.env.project
 !.env.vault
+
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+dist-server
+logs
+
