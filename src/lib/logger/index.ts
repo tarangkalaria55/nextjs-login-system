@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: *** */
 /** biome-ignore-all lint/correctness/noUnusedVariables: *** */
 
-import "../../env/config";
+import "../../../env-loader";
 
 import winston from "winston";
 import { db } from "@/drizzle/db";

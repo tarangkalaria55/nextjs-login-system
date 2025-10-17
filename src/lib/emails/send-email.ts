@@ -1,5 +1,6 @@
 import { createTransport } from "nodemailer";
 import { env } from "@/env/server";
+import type { SendMailOptionsType } from "./send-email-schema";
 
 const transporter = createTransport({
   service: "gmail",
@@ -11,33 +12,33 @@ const transporter = createTransport({
   },
 });
 
-type ManipulateFields<
-  T,
-  TRequired extends keyof T = never,
-  TOptional extends keyof T = never,
-> = Omit<T, TRequired | TOptional> &
-  Required<Pick<T, TRequired>> &
-  Partial<Pick<T, TOptional>>;
+// type ManipulateFields<
+//   T,
+//   TRequired extends keyof T = never,
+//   TOptional extends keyof T = never,
+// > = Omit<T, TRequired | TOptional> &
+//   Required<Pick<T, TRequired>> &
+//   Partial<Pick<T, TOptional>>;
 
-type MailOptions = Parameters<(typeof transporter)["sendMail"]>[0] & {
-  displayName?: string;
-};
+// type MailOptions = Parameters<(typeof transporter)["sendMail"]>[0] & {
+//   displayName?: string;
+// };
 
-// Group properties for clarity
-type RequiredFields = "to" | "subject" | "text" | "html";
-type OptionalFields = "from" | "displayName";
+// // Group properties for clarity
+// type RequiredFields = "to" | "subject" | "text" | "html";
+// type OptionalFields = "from" | "displayName";
 
-type SendMailType = ManipulateFields<
-  MailOptions,
-  RequiredFields,
-  OptionalFields
->;
+// type SendMailType = ManipulateFields<
+//   MailOptions,
+//   RequiredFields,
+//   OptionalFields
+// >;
 
 export const sendEmail = async ({
   from,
   displayName,
   ...props
-}: SendMailType) => {
+}: SendMailOptionsType) => {
   await transporter.verify();
 
   if (!from) {

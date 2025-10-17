@@ -1,4 +1,4 @@
-import "../../env/config";
+import "../../../env-loader";
 
 import { render } from "@react-email/components";
 import { betterAuth } from "better-auth";
@@ -11,7 +11,10 @@ import PasswordResetEmail from "@/components/emails/password-reset-email";
 import { db } from "@/drizzle/db";
 import { env } from "@/env/server";
 import { sendEmail } from "../emails/send-email";
+import type { SendMailOptionsType } from "../emails/send-email-schema";
 import { logger as winstonLogger } from "../logger";
+
+const getEmailUsingFetch = true;
 
 export const auth = betterAuth({
   appName: "Nextjs App",
@@ -38,12 +41,14 @@ export const auth = betterAuth({
         }),
       );
 
-      await sendEmail({
+      const mailOptions: SendMailOptionsType = {
         to: user.email,
         subject: "Reset Password",
         html: html,
         text: "",
-      });
+      };
+
+      await sendEmailFetch(mailOptions);
     },
   },
   emailVerification: {
@@ -61,12 +66,14 @@ export const auth = betterAuth({
         }),
       );
 
-      await sendEmail({
+      const mailOptions: SendMailOptionsType = {
         to: user.email,
         subject: "Verify email",
         html: html,
         text: "",
-      });
+      };
+
+      await sendEmailFetch(mailOptions);
     },
   },
   user: {
@@ -83,12 +90,14 @@ export const auth = betterAuth({
           }),
         );
 
-        await sendEmail({
+        const mailOptions: SendMailOptionsType = {
           to: newEmail,
           subject: "Verify email",
           html: html,
           text: "",
-        });
+        };
+
+        await sendEmailFetch(mailOptions);
       },
     },
   },
@@ -107,3 +116,17 @@ export const auth = betterAuth({
     },
   },
 });
+
+async function sendEmailFetch(mailOptions: SendMailOptionsType) {
+  if (getEmailUsingFetch) {
+    await fetch(`${env.BETTER_AUTH_URL}/api/send-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(mailOptions),
+    });
+  } else {
+    await sendEmail(mailOptions);
+  }
+}

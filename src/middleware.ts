@@ -2,7 +2,6 @@
 
 import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-import { logger } from "@/lib/logger";
 import { auth } from "./lib/auth/auth";
 // import { createRouteMatcher } from "./lib/clerkjs/routeMatcher";
 
@@ -24,12 +23,9 @@ export async function middleware(request: NextRequest) {
     headers: await headers(),
   });
 
-  logger.info("middleware", {
-    session: session?.session,
-    clientIp: ip,
-    url: request.url,
-    method: request.method,
-  });
+  if (!session) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-custom-client-ip", ip);
@@ -42,8 +38,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  runtime: "nodejs",
   matcher: [
-    "/((?!api/auth|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!api|auth|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };

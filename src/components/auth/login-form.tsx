@@ -1,6 +1,11 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,49 +26,104 @@ import { authClient } from "@/lib/auth/auth-client";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "../ui/checkbox";
 
+const loginSchema = z.object({
+  email: z.email({ message: "Invalid email address" }),
+  password: z.string().min(1, "Password is required"),
+  rememberMe: z.boolean(),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const router = useRouter();
 
-  const credentialHandler = async () => {
-    await authClient.signIn.email(
-      {
-        email,
-        password,
-        rememberMe,
-        callbackURL: "/",
-      },
-      {
-        onRequest: (_ctx) => {
-          setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+  });
+
+  const credentialHandler: SubmitHandler<LoginFormValues> = async (data) => {
+    setLoading(true);
+    try {
+      await authClient.signIn.email(
+        {
+          email: data.email,
+          password: data.password,
+          rememberMe: data.rememberMe,
+          callbackURL: "/",
         },
-        onResponse: (_ctx) => {
-          setLoading(false);
+        {
+          onRequest: (ctx) => {
+            console.log("onRequest", ctx);
+            setLoading(true);
+          },
+          onResponse: (ctx) => {
+            console.log("onResponse", ctx);
+            setLoading(false);
+          },
+          onSuccess: (ctx) => {
+            console.log("onSuccess", ctx);
+            router.push("/");
+          },
+          onError: (ctx) => {
+            console.log("onError", ctx);
+            toast.error(ctx.error.message);
+          },
+          onRetry: (ctx) => {
+            console.log("onRetry", ctx);
+          },
         },
-      },
-    );
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const oAuthHander = async (provider: string) => {
-    await authClient.signIn.social(
-      {
-        provider: provider,
-        callbackURL: "/",
-      },
-      {
-        onRequest: (_ctx) => {
-          setLoading(true);
+  const oAuthHandler = async (provider: string) => {
+    setLoading(true);
+    try {
+      await authClient.signIn.social(
+        {
+          provider,
+          callbackURL: "/",
         },
-        onResponse: (_ctx) => {
-          setLoading(false);
+        {
+          onRequest: (ctx) => {
+            console.log("onRequest", ctx);
+            setLoading(true);
+          },
+          onResponse: (ctx) => {
+            console.log("onResponse", ctx);
+            setLoading(false);
+          },
+          onSuccess: (ctx) => {
+            console.log("onSuccess", ctx);
+          },
+          onError: (ctx) => {
+            console.log("onError", ctx);
+            toast.error(ctx.error.message);
+          },
+          onRetry: (ctx) => {
+            console.log("onRetry", ctx);
+          },
         },
-      },
-    );
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -76,7 +136,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(credentialHandler)}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -84,13 +144,16 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  required
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  value={email}
+                  {...register("email")}
+                  className={errors.email ? "border-red-500" : ""}
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
               </Field>
+
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -107,26 +170,33 @@ export function LoginForm({
                   type="password"
                   placeholder="password"
                   autoComplete="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  {...register("password")}
+                  className={errors.password ? "border-red-500" : ""}
                 />
+                {errors.password && (
+                  <p className="text-sm text-red-600 mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
               </Field>
+
               <Field orientation="horizontal">
-                <Checkbox
-                  id="remember"
-                  checked={rememberMe}
-                  onClick={() => {
-                    setRememberMe((prev) => !prev);
-                  }}
+                <Controller
+                  control={control}
+                  name="rememberMe"
+                  render={({ field }) => (
+                    <Checkbox
+                      id="remember"
+                      checked={field.value}
+                      onClick={() => field.onChange(!field.value)}
+                    />
+                  )}
                 />
                 <FieldLabel htmlFor="remember">Remember me</FieldLabel>
               </Field>
+
               <Field>
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  onClick={credentialHandler}
-                >
+                <Button type="submit" disabled={loading}>
                   {loading ? (
                     <Loader2 size={16} className="animate-spin" />
                   ) : (
@@ -144,7 +214,7 @@ export function LoginForm({
                   variant="outline"
                   type="button"
                   disabled={loading}
-                  onClick={() => oAuthHander("google")}
+                  onClick={() => oAuthHandler("google")}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
