@@ -44,7 +44,6 @@ export function LoginForm({
         },
         onResponse: (_ctx) => {
           setLoading(false);
-          console.log(_ctx.response.url);
         },
       },
     );
@@ -62,7 +61,6 @@ export function LoginForm({
         },
         onResponse: (_ctx) => {
           setLoading(false);
-          console.log(_ctx.response.url);
         },
       },
     );

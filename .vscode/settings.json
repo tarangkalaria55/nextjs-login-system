@@ -44,5 +44,5 @@
   "[javascriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "exportall.config.folderListener": ["/src/drizzle/schemas"]
+  "exportall.config.folderListener": ["/src/drizzle/schema"]
 }
