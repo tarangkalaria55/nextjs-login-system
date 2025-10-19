@@ -1,8 +1,7 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: *** */
 
-import { headers } from "next/headers";
+import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
-import { auth } from "./lib/auth/auth";
 // import { createRouteMatcher } from "./lib/clerkjs/routeMatcher";
 
 export async function middleware(request: NextRequest) {
@@ -19,9 +18,7 @@ export async function middleware(request: NextRequest) {
 
   const ip = rawIp.split(",")[0].trim();
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = getSessionCookie(request);
 
   if (!session) {
     return NextResponse.redirect(new URL("/auth/login", request.url));

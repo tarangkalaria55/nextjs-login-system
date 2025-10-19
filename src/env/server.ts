@@ -10,6 +10,12 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.string().min(1),
 
     // Database
+    IS_NEON_DATABASE: z
+      .string()
+      .toLowerCase()
+      .trim()
+      .transform((x) => x === "1" || x === "true")
+      .pipe(z.boolean()),
     DATABASE_URL: z.string().min(1),
 
     // Google
