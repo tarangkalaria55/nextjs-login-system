@@ -22,6 +22,10 @@ export const env = createEnv({
     EMAIL_SERVER_HOST: z.string().min(1),
     EMAIL_SERVER_PORT: z.coerce.number(),
     EMAIL_FROM: z.string().min(1),
+
+    // Resend Config
+    RESEND_API_KEY: z.string().min(1),
+    RESEND_EMAIL_FROM: z.string().min(1),
   },
   experimental__runtimeEnv: process.env,
   ...baseEnv,

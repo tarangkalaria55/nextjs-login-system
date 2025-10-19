@@ -98,6 +98,16 @@ function parseArgs<T extends ArgSpecs>(options: T): ParsedArgs<T> {
   return args as ParsedArgs<T>;
 }
 
+async function createDirectory(path: string) {
+  try {
+    await fs.ensureDir(path);
+    console.log(`Folder ${path} created successfully!`);
+  } catch (err) {
+    console.error("Error creating directory:", err);
+    throw err;
+  }
+}
+
 async function copyFolder(source: string, destination: string): Promise<void> {
   try {
     await fs.copy(source, destination, { overwrite: true }); // overwrite: true will replace existing files/folders
@@ -196,6 +206,8 @@ const standaloneStaticDir = path.join(__dirname, ".next", "static");
 const fromWebConfig = path.join(__dirname, `web.${platformValue}.config`);
 
 const toWebConfig = path.join(publishDir, "web.config");
+
+await createDirectory(publishDir);
 
 await copyFile(fromWebConfig, toWebConfig);
 
