@@ -73,11 +73,8 @@ const sendEmailUsingNodemail = async ({
   });
 };
 
-export const sendEmail = async (
-  props: SendMailType,
-  options?: { useResend?: boolean },
-) => {
-  if (options?.useResend) {
+export const sendEmail = async (props: SendMailType) => {
+  if (env.EMAIL_USE_RESEND) {
     await sendEmailUsingResend(props);
   } else {
     await sendEmailUsingNodemail(props);

@@ -12,10 +12,19 @@ export const env = createEnv({
     // Database
     IS_NEON_DATABASE: z
       .string()
-      .toLowerCase()
-      .trim()
-      .transform((x) => x === "1" || x === "true")
-      .pipe(z.boolean()),
+      .nullable()
+      .optional()
+      .transform((x) => {
+        if (x === undefined || x === null || x === "") {
+          return false;
+        }
+        const value = x.trim().trim();
+        if (value === "1" || value === "true") {
+          return true;
+        }
+        return false;
+      })
+      .pipe(z.boolean().nonoptional()),
     DATABASE_URL: z.string().min(1),
 
     // Google
@@ -23,6 +32,22 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string().min(1),
 
     // Email Config
+    EMAIL_USE_RESEND: z
+      .string()
+      .nullable()
+      .optional()
+      .transform((x) => {
+        if (x === undefined || x === null || x === "") {
+          return false;
+        }
+        const value = x.trim().trim();
+        if (value === "1" || value === "true") {
+          return true;
+        }
+        return false;
+      })
+      .pipe(z.boolean().nonoptional()),
+
     EMAIL_SERVER_USER: z.string().min(1),
     EMAIL_SERVER_PASSWORD: z.string().min(1),
     EMAIL_SERVER_HOST: z.string().min(1),

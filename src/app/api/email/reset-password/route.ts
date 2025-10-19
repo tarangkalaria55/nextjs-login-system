@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       html: html,
     };
 
-    await sendEmail(mailOptions, { useResend: false });
+    await sendEmail(mailOptions);
 
     return NextResponse.json(
       { message: "Email sent successfully!" },
