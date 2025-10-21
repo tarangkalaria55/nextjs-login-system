@@ -1,14 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { SessionProvider } from "@/components/auth/session-provider";
 import { LoadingSpinner } from "@/components/loading-spinner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { authClient } from "@/lib/auth/auth-client";
-import { Header } from "./_components/header";
 
-export default function PrivateLayout({ children }: LayoutProps<"/">) {
+export default function Providers({ children }: { children: React.ReactNode }) {
   const { isPending, data, error, refetch } = authClient.useSession();
-  const router = useRouter();
 
   if (isPending) {
     return <LoadingSpinner />;
@@ -22,17 +20,9 @@ export default function PrivateLayout({ children }: LayoutProps<"/">) {
     );
   }
 
-  if (!data) {
-    router.push("/auth/login");
-    return null;
-  }
-
   return (
     <SessionProvider session={data} refetch={refetch}>
-      <div className="min-h-screen w-full bg-muted">
-        <Header />
-        {children}
-      </div>
+      <TooltipProvider>{children}</TooltipProvider>
     </SessionProvider>
   );
 }

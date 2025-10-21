@@ -18,11 +18,11 @@ export async function middleware(request: NextRequest) {
 
   const ip = rawIp.split(",")[0].trim();
 
-  const session = getSessionCookie(request);
+  // const session = getSessionCookie(request);
 
-  if (!session) {
-    return NextResponse.redirect(new URL("/auth/login", request.url));
-  }
+  // if (!session) {
+  //   return NextResponse.redirect(new URL("/auth/login", request.url));
+  // }
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-custom-client-ip", ip);

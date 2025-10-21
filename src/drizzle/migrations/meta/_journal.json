@@ -15,6 +15,13 @@
       "when": 1760508843679,
       "tag": "0001_yummy_johnny_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761063133029,
+      "tag": "0002_plain_storm",
+      "breakpoints": true
     }
   ]
 }
