@@ -49,5 +49,5 @@ yarn.lock
 package-lock.json
 
 dist-server
-logs
+/logs
 
