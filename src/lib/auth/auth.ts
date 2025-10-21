@@ -2,6 +2,9 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
+import { changeEmail } from "@/actions/email/change-email";
+import { resetPassword } from "@/actions/email/reset-password";
+import { verifyEmail } from "@/actions/email/verify-email";
 import { db } from "@/drizzle/db";
 import { env } from "@/env/server";
 import { logger as winstonLogger } from "../logger";
@@ -23,16 +26,10 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     resetPasswordTokenExpiresIn: 1 * 60 * 60,
     async sendResetPassword({ user, url }) {
-      await fetch(`${env.BETTER_AUTH_URL}/api/email/reset-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: user.email,
-          name: user.name,
-          verificationUrl: url,
-        }),
+      await resetPassword({
+        email: user.email,
+        name: user.name,
+        verificationUrl: url,
       });
     },
   },
@@ -42,16 +39,10 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     expiresIn: 1 * 60 * 60,
     async sendVerificationEmail({ user, url }) {
-      await fetch(`${env.BETTER_AUTH_URL}/api/email/verify-email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: user.email,
-          name: user.name,
-          verificationUrl: url,
-        }),
+      await verifyEmail({
+        email: user.email,
+        name: user.name,
+        verificationUrl: url,
       });
     },
   },
@@ -63,17 +54,11 @@ export const auth = betterAuth({
     changeEmail: {
       enabled: true,
       async sendChangeEmailVerification({ user, url, newEmail }) {
-        await fetch(`${env.BETTER_AUTH_URL}/api/email/change-email`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: user.name,
-            oldEmail: user.email,
-            newEmail: newEmail,
-            verificationUrl: url,
-          }),
+        await changeEmail({
+          name: user.name,
+          oldEmail: user.email,
+          newEmail: newEmail,
+          verificationUrl: url,
         });
       },
     },
