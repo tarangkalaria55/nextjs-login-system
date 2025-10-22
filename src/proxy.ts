@@ -1,10 +1,10 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: *** */
 
-import { getSessionCookie } from "better-auth/cookies";
+// import { getSessionCookie } from "better-auth/cookies";
 import { type NextRequest, NextResponse } from "next/server";
 // import { createRouteMatcher } from "./lib/clerkjs/routeMatcher";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const vercelIp = (request as any).ip;
 
   const xForwardedFor = request.headers.get("x-forwarded-for");
