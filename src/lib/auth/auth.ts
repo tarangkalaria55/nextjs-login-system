@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { createAuthMiddleware } from "better-auth/api";
 import { nextCookies } from "better-auth/next-js";
+import { admin } from "better-auth/plugins/admin";
 import { changeEmail } from "@/actions/email/change-email";
 import { resetPassword } from "@/actions/email/reset-password";
 import { verifyEmail } from "@/actions/email/verify-email";
@@ -14,7 +15,7 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
-  plugins: [nextCookies()],
+  plugins: [nextCookies(), admin()],
   socialProviders: {
     google: {
       clientId: env.GOOGLE_CLIENT_ID,

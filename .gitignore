@@ -43,6 +43,7 @@ next-env.d.ts
 .flaskenv*
 !.env.project
 !.env.vault
+!.env.sample
 
 pnpm-lock.yaml
 yarn.lock

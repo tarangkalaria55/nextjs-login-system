@@ -57,6 +57,16 @@ export const env = createEnv({
     // Resend Config
     RESEND_API_KEY: z.string().min(1),
     RESEND_EMAIL_FROM: z.string().min(1),
+
+    // Settings
+    PAGE_SIZE: z.coerce.number(),
+    PAYMENT_METHODS: z
+      .string()
+      .transform((value) => value.split(",").map((role) => role.trim())),
+    DEFAULT_PAYMENT_METHOD: z.string(),
+    USER_ROLES: z
+      .string()
+      .transform((value) => value.split(",").map((role) => role.trim())),
   },
   experimental__runtimeEnv: process.env,
   ...baseEnv,
